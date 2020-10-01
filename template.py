@@ -30,30 +30,33 @@ class Maze:
         """
         inputs:
             start_position:
-                tuple of x1,y1 position for starting node
+                tuple of x,y position for starting node
             direction:
                 N, S, E, W
             edge_value:
                 the value of the edge
         """
-        x1, y1 = start_position
+        x, y = start_position
 
-        # checking if an edge addition
-        if direction == "N" and 0 <= y1 + 1 <= self.num_rows:
-            self.grid[x1][y1].neighbors[direction] = edge_value
-            self.grid[x1][y1 - 1].neighbors["S"] = edge_value
+        # validate input coordinates
+        if x not in range(0, self.num_columns) or y not in range(0, self.num_rows):
+            print("Invalid coordinates.")
+            return
 
-        if direction == "S" and 0 <= y1 - 1 <= self.num_rows:
-            self.grid[x1][y1].neighbors[direction] = edge_value
-            self.grid[x1][y1 + 1].neighbors["N"] = edge_value
+        self.grid[y][x].neighbors[direction] = edge_value
 
-        if direction == "E" and 0 <= x1 + 1 <= self.num_columns:
-            self.grid[x1][y1].neighbors[direction] = edge_value
-            self.grid[x1 + 1][y1].neighbors["W"] = edge_value
+        # validate edge addition
+        if direction == "N" and 0 <= y - 1 <= self.num_rows - 1:
+            self.grid[y - 1][x].neighbors["S"] = edge_value
 
-        if direction == "W" and 0 <= x1 - 1 <= self.num_columns:
-            self.grid[x1][y1].neighbors[direction] = edge_value
-            self.grid[x1 - 1][y1].neighbors["E"] = edge_value
+        if direction == "S" and 0 <= y + 1 <= self.num_rows - 1:
+            self.grid[y + 1][x].neighbors["N"] = edge_value
+
+        if direction == "W" and 0 <= x - 1 <= self.num_columns - 1:
+            self.grid[y][x - 1].neighbors["E"] = edge_value
+
+        if direction == "E" and 0 <= x + 1 <= self.num_columns - 1:
+            self.grid[y][x + 1].neighbors["W"] = edge_value
 
         return
 
@@ -72,10 +75,13 @@ class Maze:
             for idx, col in enumerate(row):
                 if col.neighbors["W"]:
                     print("|", end="")
+                else:
+                    print(" ", end="")
                 print("   ", end="")
                 if idx == self.num_columns - 1 and col.neighbors["E"]:
                     print("|", end="")
             print("")
+
             for idx, col in enumerate(row):
                 print("+", end="")
                 if col.neighbors["S"]:
@@ -86,10 +92,11 @@ class Maze:
 
 
 # initializing a maze with 4 rows and 5 cols
-maze = Maze(4, 5)
+maze = Maze(4, 4)
 
 # adding test edge
-maze.add_edge((0, 0), "N", 0)
+maze.add_edge((1, 1), "N", 0)
+maze.add_edge((1, 1), "W", 0)
 
 maze.display()
 
