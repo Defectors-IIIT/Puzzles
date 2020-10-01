@@ -59,16 +59,22 @@ class Maze:
 
     # display the maze as an ASCII grid
     def display(self):
-        print("+" + "---+" * self.num_columns, end="")
+        for idx, col in enumerate(self.grid[0]):
+            print("+", end="")
+            if col.neighbors["N"]:
+                print("---", end="")
+            else:
+                print("   ", end="")
+        print("+", end="")
+
         for row in self.grid:
             print("")
             for idx, col in enumerate(row):
                 if col.neighbors["W"]:
                     print("|", end="")
                 print("   ", end="")
-                if col.neighbors["E"]:
-                    if not col.neighbors["W"] or idx == self.num_columns - 1:
-                        print("|", end="")
+                if idx == self.num_columns - 1 and col.neighbors["E"]:
+                    print("|", end="")
             print("")
             for idx, col in enumerate(row):
                 print("+", end="")
@@ -79,12 +85,11 @@ class Maze:
             print("+", end="")
 
 
-# pprint(list(map(lambda row: [node.neighbors for node in row], Maze(2, 3).grid)))
-
+# initializing a maze with 4 rows and 5 cols
 maze = Maze(4, 5)
 
 # adding test edge
-# maze.add_edge((1, 1), "N", 0)
+maze.add_edge((0, 0), "N", 0)
 
 maze.display()
 
