@@ -44,19 +44,19 @@ class Maze():
         # checking if an edge addition 
         if (direction == 'N' and 0<=y1+1<=self.num_rows):
             self.grid[x1][y1].neighbors[direction] = edge_value
-            self.grid[x1+1][y1].neighbors['S'] = edge_value
+            self.grid[x1][y1-1].neighbors['S'] = edge_value
             
         if (direction == 'S' and 0<=y1-1<=self.num_rows):
             self.grid[x1][y1].neighbors[direction] = edge_value
-            self.grid[x1-1][y1].neighbors['N'] = edge_value
+            self.grid[x1][y1+1].neighbors['N'] = edge_value
             
         if (direction == 'E' and 0<=x1+1<=self.num_columns):
             self.grid[x1][y1].neighbors[direction] = edge_value
-            self.grid[x1][y1+1].neighbors['W'] = edge_value
+            self.grid[x1+1][y1].neighbors['W'] = edge_value
             
         if (direction == 'W' and 0<=x1-1<=self.num_columns):
             self.grid[x1][y1].neighbors[direction] = edge_value
-            self.grid[x1][y1-1].neighbors['E'] = edge_value
+            self.grid[x1-1][y1].neighbors['E'] = edge_value
             
         
         return
