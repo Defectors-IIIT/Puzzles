@@ -26,7 +26,7 @@ class Maze:
             self.grid.append(temp)
         return
 
-    def add_edge(self, start_position, direction, edge_value):
+    def add_path(self, start_position, direction, edge_value):
         """
         inputs:
             start_position:
@@ -95,8 +95,8 @@ class Maze:
 maze = Maze(4, 4)
 
 # adding test edge
-maze.add_edge((1, 1), "N", 0)
-maze.add_edge((1, 1), "W", 0)
+maze.add_path((1, 1), "N", 0)
+maze.add_path((1, 1), "W", 0)
 
 maze.display()
 
