@@ -40,7 +40,7 @@ class Maze:
 
         # validate input coordinates
         if x not in range(0, self.num_columns) or y not in range(0, self.num_rows):
-            print("Invalid coordinates.")
+            raise Exception("Invalid coordinates.")
             return
 
         self.grid[y][x].neighbors[direction] = edge_value
