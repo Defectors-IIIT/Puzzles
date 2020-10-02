@@ -1,5 +1,3 @@
-from pprint import pprint
-
 # Infinity used to represent a wall in the maze
 INF = float("inf")
 
@@ -93,11 +91,8 @@ class Maze:
 
 
 # initializing a maze with 4 rows and 5 cols
-maze = Maze(4, 4)
-
+# maze = Maze(4, 4)
 # adding test edge
-maze.add_path((1, 1), "N", 0)
-maze.add_path((1, 1), "W", 0)
-
-maze.display()
-
+# maze.add_path((1, 1), "N", 0)
+# maze.add_path((1, 1), "W", 0)
+# maze.display()
