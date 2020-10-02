@@ -5,9 +5,18 @@ INF = float("inf")
 
 # Each cell that can be modified
 class Node:
-    def __init__(self):
-        # Directions specifying the dege_weights
+    def __init__(self, color=(0, 0, 0)):
+        """
+        inputs:
+            color:
+                background color of the cell
+                3-tuple of integers in the range(0, 256)
+                defaults to black
+        """
+
+        # Directions specifying the edge weights
         self.neighbors = {"N": INF, "S": INF, "W": INF, "E": INF}
+        self.color = color
         return
 
 
@@ -67,37 +76,6 @@ class Maze:
 
         return
 
-    # to yeet
-    def display(self):
-        for idx, col in enumerate(self.grid[0]):
-            print("+", end="")
-            if col.neighbors["N"]:
-                print("---", end="")
-            else:
-                print("   ", end="")
-        print("+", end="")
-
-        for row in self.grid:
-            print()
-            for idx, col in enumerate(row):
-                if col.neighbors["W"]:
-                    print("|", end="")
-                else:
-                    print(" ", end="")
-                print("   ", end="")
-                if idx == self.num_columns - 1 and col.neighbors["E"]:
-                    print("|", end="")
-            print()
-
-            for idx, col in enumerate(row):
-                print("+", end="")
-                if col.neighbors["S"]:
-                    print("---", end="")
-                else:
-                    print("   ", end="")
-            print("+", end="")
-        print()
-
     def draw(self, cell_width=50, padding=10):
         """
         inputs:
@@ -117,25 +95,25 @@ class Maze:
         for i in range(self.num_rows):
             for j in range(self.num_columns):
 
-                # Top left corner
+                # Top left corner coordinate
                 x1 = (padding / 2) + (j * cell_width)
                 y1 = (padding / 2) + (i * cell_width)
 
-                # Bottom right corner
+                # Bottom right corner coordinate
                 x2 = (padding / 2) + ((j + 1) * cell_width)
                 y2 = (padding / 2) + ((i + 1) * cell_width)
 
                 # Cell background
-                draw.rectangle((x1, y1, x2, y2), fill=(0, 0, 0))
+                draw.rectangle((x1, y1, x2, y2), fill=self.grid[i][j].color)
 
                 # Cell edges
-                if self.grid[i][j].neighbors["N"]:
+                if self.grid[i][j].neighbors["N"] == INF:
                     draw.line((x1, y1, x2, y1), width=2)
-                if self.grid[i][j].neighbors["S"]:
+                if self.grid[i][j].neighbors["S"] == INF:
                     draw.line((x1, y2, x2, y2), width=2)
-                if self.grid[i][j].neighbors["E"]:
-                    draw.line((x2, y1, x2, y2), width=2)
-                if self.grid[i][j].neighbors["W"]:
+                if self.grid[i][j].neighbors["W"] == INF:
                     draw.line((x1, y1, x1, y2), width=2)
+                if self.grid[i][j].neighbors["E"] == INF:
+                    draw.line((x2, y1, x2, y2), width=2)
 
         return base
