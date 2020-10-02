@@ -71,7 +71,7 @@ class Maze:
         print("+", end="")
 
         for row in self.grid:
-            print("")
+            print()
             for idx, col in enumerate(row):
                 if col.neighbors["W"]:
                     print("|", end="")
@@ -80,7 +80,7 @@ class Maze:
                 print("   ", end="")
                 if idx == self.num_columns - 1 and col.neighbors["E"]:
                     print("|", end="")
-            print("")
+            print()
 
             for idx, col in enumerate(row):
                 print("+", end="")
@@ -89,6 +89,7 @@ class Maze:
                 else:
                     print("   ", end="")
             print("+", end="")
+        print()
 
 
 # initializing a maze with 4 rows and 5 cols
