@@ -1,4 +1,5 @@
 from PIL import Image, ImageDraw
+from json import dump as jdump
 
 # Infinity used to represent a wall in the maze
 INF = float("inf")
@@ -124,6 +125,7 @@ class Maze:
             start:
                 specifies the starting point to color using bfs
         """
+
         vis = []
         for i in range(0, self.num_rows):
             vis.append(list(bytearray(self.num_columns)))
@@ -215,3 +217,20 @@ class Maze:
                 elif "E" in directions:
                     ret["RightTurns"] += 1
         return ret
+
+    def dump(self, filename):
+        """
+        inputs:
+            filename:
+                to dump the maze into
+        """
+
+        serialized = list(
+            map(
+                lambda row: [{"neighbors": col.neighbors, "color": col.color} for col in row],
+                self.grid,
+            )
+        )
+
+        with open(filename, "w") as maze_dump:
+            jdump(serialized, maze_dump)
