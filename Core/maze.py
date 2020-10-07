@@ -1,12 +1,12 @@
 from PIL import Image, ImageDraw
-from json import dump as jdump
+from json import dump as jdump, load as jload
 
 # Infinity used to represent a wall in the maze
 INF = float("inf")
 
 # Each cell that can be modified
 class Node:
-    def __init__(self, color=(0, 0, 0)):
+    def __init__(self, neighbors=None, color=None):
         """
         inputs:
             color:
@@ -15,15 +15,21 @@ class Node:
                 defaults to black
         """
 
-        # Directions specifying the edge weights
+        # Initializing node attributes
         self.neighbors = {"N": INF, "S": INF, "W": INF, "E": INF}
-        self.color = color
+        self.color = (0, 0, 0)
+
+        if neighbors:
+            self.neighbors = neighbors
+        if color:
+            self.color = tuple(color)
+
         return
 
 
 # The maze class that we will be using to write algorithms
 class Maze:
-    def __init__(self, num_rows, num_columns):
+    def __init__(self, num_rows=1, num_columns=1):
         """
         inputs:
             num_rows:
@@ -38,9 +44,9 @@ class Maze:
         self.num_columns = num_columns
 
         # Populating the grid with nodes (representing weights to adjacent nodes)
-        for i in range(num_rows):
+        for i in range(self.num_rows):
             temp = []
-            for j in range(num_columns):
+            for j in range(self.num_columns):
                 temp.append(Node())
             self.grid.append(temp)
         return
@@ -225,6 +231,7 @@ class Maze:
                 to dump the maze into
         """
 
+        # Serialize maze into a json object
         serialized = list(
             map(
                 lambda row: [{"neighbors": col.neighbors, "color": col.color} for col in row],
@@ -234,3 +241,27 @@ class Maze:
 
         with open(filename, "w") as maze_dump:
             jdump(serialized, maze_dump)
+
+    def load(self, filename):
+        """
+        inputs:
+            filename:
+                to load maze from
+        """
+
+        with open(filename, "r") as maze_load:
+            maze = jload(maze_load)
+
+        # Set maze dimensions from file
+        self.grid = []
+        self.num_columns = len(maze[0])
+        self.num_rows = len(maze)
+
+        # Populating the grid with loaded nodes
+        for i in range(self.num_rows):
+            temp = []
+            for j in range(self.num_columns):
+                temp.append(Node(neighbors=maze[i][j]["neighbors"], color=maze[i][j]["color"]))
+            self.grid.append(temp)
+
+        return
