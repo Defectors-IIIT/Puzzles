@@ -155,3 +155,57 @@ class Maze:
             if self.grid[x][y].neighbors['E'] != INF and vis[x][y+1] == 0:
                 queue.append((x, y+1))
                 self.grid[x][y+1].color = color
+
+    def reset(self):
+        """
+        Reinitializes all the edge weights to infinity
+        """
+        for i in range(0, self.num_rows):
+            for j in range(0, self.num_columns):
+                self.grid[i][j].neighbors['N'] = INF
+                self.grid[i][j].neighbors['S'] = INF
+                self.grid[i][j].neighbors['E'] = INF
+                self.grid[i][j].neighbors['W'] = INF
+
+    def benchmark(self):
+        """
+        Deadends : only one exit/entry
+        Straightways : go N-S or E-W
+        Left turns : Go N-W or S-W
+        Right turns : Go N-E or S-E
+        Junctions : Have 3 entries/exits
+        Crossroads : Have 4 entries/exits
+        """
+        ret = {"Deadends" : 0, "Straightways" : 0, "LeftTurns" : 0, "RightTurns" : 0, "Junctions" : 0, "Crossroads" : 0}
+        
+        for i in range(0, self.num_rows):
+            for j in range(0, self.num_columns):
+                temp = self.grid[i][j].neighbors
+                directions = []
+                
+                if temp['N'] != INF:
+                    directions.append('N')
+                if temp['S'] != INF:
+                    directions.append('S')
+                if temp['E'] != INF:
+                    directions.append('E')
+                if temp['W'] != INF:
+                    directions.append('W')
+                    
+                set 
+                if len(directions) == 1:
+                    ret["Deadends"] += 1
+                elif len(directions) == 4:
+                    ret["Crossroads"] += 1
+                elif len(directions) == 3:
+                    ret["Junctions"] += 1
+                elif 'N' in directions and 'S' in directions:
+                    ret["Straightways"] += 1
+                elif 'E' in directions and 'W' in directions:
+                    ret["Straightways"] += 1
+                elif 'W' in directions:
+                    ret["LeftTurns"] += 1
+                elif 'E' in directions:
+                    ret["RightTurns"] += 1
+        return ret
+        
