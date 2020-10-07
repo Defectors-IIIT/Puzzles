@@ -96,12 +96,12 @@ class Maze:
             for j in range(self.num_columns):
 
                 # Top left corner coordinate
-                x1 = (padding / 2) + (j * cell_width)
-                y1 = (padding / 2) + (i * cell_width)
+                x1 = (padding / 2) + (j * cell_width) - 1
+                y1 = (padding / 2) + (i * cell_width) - 1
 
                 # Bottom right corner coordinate
-                x2 = (padding / 2) + ((j + 1) * cell_width)
-                y2 = (padding / 2) + ((i + 1) * cell_width)
+                x2 = (padding / 2) + ((j + 1) * cell_width) - 1
+                y2 = (padding / 2) + ((i + 1) * cell_width) - 1
 
                 # Cell background
                 draw.rectangle((x1, y1, x2, y2), fill=self.grid[i][j].color)
@@ -117,8 +117,8 @@ class Maze:
                     draw.line((x2, y1, x2, y2), width=2)
 
         return base
-    
-    def add_colors(self, start = (0, 0)):
+
+    def add_colors(self, start=(0, 0)):
         """
         inputs:
             start:
@@ -128,7 +128,7 @@ class Maze:
         for i in range(0, self.num_rows):
             vis.append(list(bytearray(self.num_columns)))
         color = (255, 0, 0)
-        change = int(400/(self.num_columns*self.num_rows))
+        change = int(400 / (self.num_columns * self.num_rows))
         if change == 0:
             change = 1
         x, y = start
@@ -143,18 +143,18 @@ class Maze:
             if r > 30:
                 r -= change
             color = (r, g, b)
-            if self.grid[x][y].neighbors['N'] != INF and vis[x-1][y] == 0:
-                queue.append((x-1, y))
-                self.grid[x-1][y].color = color
-            if self.grid[x][y].neighbors['S'] != INF and vis[x+1][y] == 0:
-                queue.append((x+1, y))
-                self.grid[x+1][y].color = color
-            if self.grid[x][y].neighbors['W'] != INF and vis[x][y-1] == 0:
-                queue.append((x, y-1))
-                self.grid[x][y-1].color = color
-            if self.grid[x][y].neighbors['E'] != INF and vis[x][y+1] == 0:
-                queue.append((x, y+1))
-                self.grid[x][y+1].color = color
+            if self.grid[x][y].neighbors["N"] != INF and vis[x - 1][y] == 0:
+                queue.append((x - 1, y))
+                self.grid[x - 1][y].color = color
+            if self.grid[x][y].neighbors["S"] != INF and vis[x + 1][y] == 0:
+                queue.append((x + 1, y))
+                self.grid[x + 1][y].color = color
+            if self.grid[x][y].neighbors["W"] != INF and vis[x][y - 1] == 0:
+                queue.append((x, y - 1))
+                self.grid[x][y - 1].color = color
+            if self.grid[x][y].neighbors["E"] != INF and vis[x][y + 1] == 0:
+                queue.append((x, y + 1))
+                self.grid[x][y + 1].color = color
 
     def reset(self):
         """
@@ -162,10 +162,10 @@ class Maze:
         """
         for i in range(0, self.num_rows):
             for j in range(0, self.num_columns):
-                self.grid[i][j].neighbors['N'] = INF
-                self.grid[i][j].neighbors['S'] = INF
-                self.grid[i][j].neighbors['E'] = INF
-                self.grid[i][j].neighbors['W'] = INF
+                self.grid[i][j].neighbors["N"] = INF
+                self.grid[i][j].neighbors["S"] = INF
+                self.grid[i][j].neighbors["E"] = INF
+                self.grid[i][j].neighbors["W"] = INF
 
     def benchmark(self):
         """
@@ -176,36 +176,42 @@ class Maze:
         Junctions : Have 3 entries/exits
         Crossroads : Have 4 entries/exits
         """
-        ret = {"Deadends" : 0, "Straightways" : 0, "LeftTurns" : 0, "RightTurns" : 0, "Junctions" : 0, "Crossroads" : 0}
-        
+        ret = {
+            "Deadends": 0,
+            "Straightways": 0,
+            "LeftTurns": 0,
+            "RightTurns": 0,
+            "Junctions": 0,
+            "Crossroads": 0,
+        }
+
         for i in range(0, self.num_rows):
             for j in range(0, self.num_columns):
                 temp = self.grid[i][j].neighbors
                 directions = []
-                
-                if temp['N'] != INF:
-                    directions.append('N')
-                if temp['S'] != INF:
-                    directions.append('S')
-                if temp['E'] != INF:
-                    directions.append('E')
-                if temp['W'] != INF:
-                    directions.append('W')
-                    
-                set 
+
+                if temp["N"] != INF:
+                    directions.append("N")
+                if temp["S"] != INF:
+                    directions.append("S")
+                if temp["E"] != INF:
+                    directions.append("E")
+                if temp["W"] != INF:
+                    directions.append("W")
+
+                set
                 if len(directions) == 1:
                     ret["Deadends"] += 1
                 elif len(directions) == 4:
                     ret["Crossroads"] += 1
                 elif len(directions) == 3:
                     ret["Junctions"] += 1
-                elif 'N' in directions and 'S' in directions:
+                elif "N" in directions and "S" in directions:
                     ret["Straightways"] += 1
-                elif 'E' in directions and 'W' in directions:
+                elif "E" in directions and "W" in directions:
                     ret["Straightways"] += 1
-                elif 'W' in directions:
+                elif "W" in directions:
                     ret["LeftTurns"] += 1
-                elif 'E' in directions:
+                elif "E" in directions:
                     ret["RightTurns"] += 1
         return ret
-        
