@@ -207,7 +207,6 @@ class Maze:
                 if temp["W"] != INF:
                     directions.append("W")
 
-                set
                 if len(directions) == 1:
                     ret["Deadends"] += 1
                 elif len(directions) == 4:
