@@ -125,21 +125,22 @@ class Maze:
 
         return base
 
-    def add_colors(self, start=(0, 0)):
+    def add_colors(self, start=(0, 0), color=(255, 0, 0)):
         """
         inputs:
             start:
                 specifies the starting point to color using bfs
+            color:
+                base color for each cell
         """
+
+        color = (*color, 255)
 
         vis = []
         for i in range(0, self.num_rows):
             vis.append(list(bytearray(self.num_columns)))
 
-        color = (255, 0, 0)
-        change = int(400 / (self.num_columns * self.num_rows))
-        if change == 0:
-            change = 1
+        change = 3 + int(512 / (self.num_columns * self.num_rows))
 
         x, y = start
         self.grid[x][y].color = color
@@ -149,10 +150,9 @@ class Maze:
             x, y = queue[0]
             queue.pop(0)
             vis[x][y] = 1
-            r, g, b = self.grid[x][y].color
-            if r > 30:
-                r -= change
-            color = (r, g, b)
+            r, g, b, a = self.grid[x][y].color
+            color = (r, g, b, a - change)
+
             if self.grid[x][y].neighbors["N"] != INF and vis[x - 1][y] == 0:
                 queue.append((x - 1, y))
                 self.grid[x - 1][y].color = color
