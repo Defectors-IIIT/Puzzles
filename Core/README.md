@@ -51,12 +51,13 @@ Adds a (weighted) path between two adjacent nodes.
 - edge_value (`float`): Weight of the path to be added.
 
 ```
-add_colors(start)
+add_colors(start, color)
 ```
 Colors the entire maze using BFS.
 
 **Parameters:**
 - start (`tuple`): Optional. x, y coordinates of the starting node. Defaults to (0, 0).
+- color (`tuple`): Optional. Base color of each cell. Defaults to (255, 0, 0) [red]. 
 
 ```
 draw(cell_width, padding)
