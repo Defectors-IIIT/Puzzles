@@ -17,7 +17,7 @@ class Node:
 
         # Initializing node attributes
         self.neighbors = {"N": INF, "S": INF, "W": INF, "E": INF}
-        self.color = (0, 0, 0)
+        self.color = (0, 0, 0, 255)
 
         if neighbors:
             self.neighbors = neighbors
@@ -96,7 +96,7 @@ class Maze:
             padding + (self.num_columns * cell_width),
             padding + (self.num_rows * cell_width),
         )
-        base = Image.new("RGB", base_dimens, (0, 0, 0))
+        base = Image.new("RGBA", base_dimens, (0, 0, 0, 255))
         draw = ImageDraw.Draw(base)
 
         for i in range(self.num_rows):
@@ -135,14 +135,16 @@ class Maze:
         vis = []
         for i in range(0, self.num_rows):
             vis.append(list(bytearray(self.num_columns)))
+
         color = (255, 0, 0)
         change = int(400 / (self.num_columns * self.num_rows))
         if change == 0:
             change = 1
+
         x, y = start
         self.grid[x][y].color = color
-        queue = []
-        queue.append((x, y))
+        queue = [(x, y)]
+
         while len(queue):
             x, y = queue[0]
             queue.pop(0)
@@ -168,6 +170,7 @@ class Maze:
         """
         Reinitializes all the edge weights to infinity
         """
+
         for i in range(0, self.num_rows):
             for j in range(0, self.num_columns):
                 self.grid[i][j].neighbors["N"] = INF
@@ -184,6 +187,7 @@ class Maze:
         Junctions : Have 3 entries/exits
         Crossroads : Have 4 entries/exits
         """
+
         ret = {
             "Deadends": 0,
             "Straightways": 0,
