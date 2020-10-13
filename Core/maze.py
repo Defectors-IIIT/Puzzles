@@ -140,7 +140,7 @@ class Maze:
         for i in range(0, self.num_rows):
             vis.append(list(bytearray(self.num_columns)))
 
-        change = 3 + int(512 / (self.num_columns * self.num_rows))
+        change = 1 + int(512 / (self.num_columns * self.num_rows))
 
         x, y = start
         self.grid[x][y].color = color
@@ -151,7 +151,12 @@ class Maze:
             queue.pop(0)
             vis[x][y] = 1
             r, g, b, a = self.grid[x][y].color
-            color = (r, g, b, a - change)
+            color = (
+                r - change if r - change > 1 else 1,
+                g - change if g - change > 1 else 1,
+                b - change if b - change > 1 else 1,
+                255,
+            )
 
             if self.grid[x][y].neighbors["N"] != INF and vis[x - 1][y] == 0:
                 queue.append((x - 1, y))
