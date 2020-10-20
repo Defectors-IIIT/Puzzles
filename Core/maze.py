@@ -129,7 +129,7 @@ class Maze:
 
         return base
 
-    def add_colors(self, start=(0, 0), color=(255, 0, 0)):
+    def add_colors(self, start=(0, 0), color=(255, 0, 0), path=[]):
         """
         inputs:
             start:
@@ -140,6 +140,13 @@ class Maze:
 
         color = (*color, 255)
 
+        # When a path list is passed as argument, color only the path
+        if path:
+            for x, y in path:
+                self.grid[x][y].color = color
+            return
+
+        # Color the entire maze
         vis = []
         for i in range(0, self.num_rows):
             vis.append(list(bytearray(self.num_columns)))
