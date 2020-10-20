@@ -273,7 +273,7 @@ class Maze:
         for i in range(self.num_rows):
             temp = []
             for j in range(self.num_columns):
-                temp.append(Node(neighbors=maze[i][j]["neighbors"], color=maze[i][j]["color"]))
+                temp.append(Node(neighbors=maze[i][j]["neighbors"], color=[0, 0, 0]))
             self.grid.append(temp)
 
         return
