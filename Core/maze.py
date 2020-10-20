@@ -1,5 +1,9 @@
+from os import path
 from PIL import Image, ImageDraw
 from json import dump as jdump, load as jload
+
+# Directory to store generated maze dumps in
+maze_store = path.dirname(path.abspath(__file__))
 
 # Infinity used to represent a wall in the maze
 INF = float("inf")
@@ -247,7 +251,7 @@ class Maze:
             )
         )
 
-        with open(filename, "w") as maze_dump:
+        with open(path.join(maze_store, "Generated", filename), "w") as maze_dump:
             jdump(serialized, maze_dump)
 
     def load(self, filename):
@@ -257,7 +261,7 @@ class Maze:
                 to load maze from
         """
 
-        with open(filename, "r") as maze_load:
+        with open(path.join(maze_store, "Generated", filename), "r") as maze_load:
             maze = jload(maze_load)
 
         # Set maze dimensions from file
