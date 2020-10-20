@@ -246,7 +246,7 @@ class Maze:
         # Serialize maze into a json object
         serialized = list(
             map(
-                lambda row: [{"neighbors": col.neighbors, "color": col.color} for col in row],
+                lambda row: [{"neighbors": col.neighbors} for col in row],
                 self.grid,
             )
         )
