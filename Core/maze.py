@@ -1,5 +1,9 @@
+from os import path
 from PIL import Image, ImageDraw
 from json import dump as jdump, load as jload
+
+# Directory to store generated maze dumps in
+maze_store = path.dirname(path.abspath(__file__))
 
 # Infinity used to represent a wall in the maze
 INF = float("inf")
@@ -125,7 +129,7 @@ class Maze:
 
         return base
 
-    def add_colors(self, start=(0, 0), color=(255, 0, 0)):
+    def add_colors(self, start=(0, 0), color=(255, 0, 0), path=[]):
         """
         inputs:
             start:
@@ -136,6 +140,13 @@ class Maze:
 
         color = (*color, 255)
 
+        # When a path list is passed as argument, color only the path
+        if path:
+            for x, y in path:
+                self.grid[x][y].color = color
+            return
+
+        # Color the entire maze
         vis = []
         for i in range(0, self.num_rows):
             vis.append(list(bytearray(self.num_columns)))
@@ -244,12 +255,12 @@ class Maze:
         # Serialize maze into a json object
         serialized = list(
             map(
-                lambda row: [{"neighbors": col.neighbors, "color": col.color} for col in row],
+                lambda row: [{"neighbors": col.neighbors} for col in row],
                 self.grid,
             )
         )
 
-        with open(filename, "w") as maze_dump:
+        with open(path.join(maze_store, "Generated", filename), "w") as maze_dump:
             jdump(serialized, maze_dump)
 
     def load(self, filename):
@@ -259,7 +270,7 @@ class Maze:
                 to load maze from
         """
 
-        with open(filename, "r") as maze_load:
+        with open(path.join(maze_store, "Generated", filename), "r") as maze_load:
             maze = jload(maze_load)
 
         # Set maze dimensions from file
@@ -271,7 +282,7 @@ class Maze:
         for i in range(self.num_rows):
             temp = []
             for j in range(self.num_columns):
-                temp.append(Node(neighbors=maze[i][j]["neighbors"], color=maze[i][j]["color"]))
+                temp.append(Node(neighbors=maze[i][j]["neighbors"], color=[0, 0, 0]))
             self.grid.append(temp)
 
         return
