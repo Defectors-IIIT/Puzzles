@@ -149,6 +149,8 @@ class Maze:
         while len(queue):
             x, y = queue[0]
             queue.pop(0)
+            if vis[x][y] == 1:
+                continue
             vis[x][y] = 1
             r, g, b, a = self.grid[x][y].color
             color = (
