@@ -245,6 +245,70 @@ class Maze:
                     ret["RightTurns"] += 1
         return ret
 
+    def diff(self, maze, cell_width=50, padding=10):
+        """
+        inputs:
+            maze:
+                to compare with
+            cell_width:
+                dimension of each cell in the grid
+            padding:
+                for the outer maze edge
+        """
+
+        base_dimens = (
+            padding + (self.num_columns * cell_width),
+            padding + (self.num_rows * cell_width),
+        )
+        base = Image.new("RGBA", base_dimens, (0, 0, 0, 255))
+        draw = ImageDraw.Draw(base)
+
+        for i in range(self.num_rows):
+            for j in range(self.num_columns):
+
+                # Top left corner coordinate
+                x1 = (padding / 2) + (j * cell_width) - 1
+                y1 = (padding / 2) + (i * cell_width) - 1
+
+                # Bottom right corner coordinate
+                x2 = (padding / 2) + ((j + 1) * cell_width) - 1
+                y2 = (padding / 2) + ((i + 1) * cell_width) - 1
+
+                # Cell background
+                draw.rectangle((x1, y1, x2, y2), fill=self.grid[i][j].color)
+
+                # Common edges
+                if self.grid[i][j].neighbors["N"] == INF or maze.grid[i][j].neighbors["N"] == INF:
+                    draw.line((x1, y1, x2, y1), width=2, fill=(255, 255, 255))
+                if self.grid[i][j].neighbors["S"] == INF or maze.grid[i][j].neighbors["S"] == INF:
+                    draw.line((x1, y2, x2, y2), width=2, fill=(255, 255, 255))
+                if self.grid[i][j].neighbors["W"] == INF or maze.grid[i][j].neighbors["W"] == INF:
+                    draw.line((x1, y1, x1, y2), width=2, fill=(255, 255, 255))
+                if self.grid[i][j].neighbors["E"] == INF or maze.grid[i][j].neighbors["E"] == INF:
+                    draw.line((x2, y1, x2, y2), width=2, fill=(255, 255, 255))
+
+                # Added edges
+                if self.grid[i][j].neighbors["N"] == INF and maze.grid[i][j].neighbors["N"] != INF:
+                    draw.line((x1, y1, x2, y1), width=2, fill=(0, 255, 0))
+                if self.grid[i][j].neighbors["S"] == INF and maze.grid[i][j].neighbors["S"] != INF:
+                    draw.line((x1, y2, x2, y2), width=2, fill=(0, 255, 0))
+                if self.grid[i][j].neighbors["W"] == INF and maze.grid[i][j].neighbors["W"] != INF:
+                    draw.line((x1, y1, x1, y2), width=2, fill=(0, 255, 0))
+                if self.grid[i][j].neighbors["E"] == INF and maze.grid[i][j].neighbors["E"] != INF:
+                    draw.line((x2, y1, x2, y2), width=2, fill=(0, 255, 0))
+
+                # Removed edges
+                if self.grid[i][j].neighbors["N"] != INF and maze.grid[i][j].neighbors["N"] == INF:
+                    draw.line((x1, y1, x2, y1), width=2, fill=(255, 0, 0))
+                if self.grid[i][j].neighbors["S"] != INF and maze.grid[i][j].neighbors["S"] == INF:
+                    draw.line((x1, y2, x2, y2), width=2, fill=(255, 0, 0))
+                if self.grid[i][j].neighbors["W"] != INF and maze.grid[i][j].neighbors["W"] == INF:
+                    draw.line((x1, y1, x1, y2), width=2, fill=(255, 0, 0))
+                if self.grid[i][j].neighbors["E"] != INF and maze.grid[i][j].neighbors["E"] == INF:
+                    draw.line((x2, y1, x2, y2), width=2, fill=(255, 0, 0))
+
+        return base
+
     def dump(self, filename):
         """
         inputs:
