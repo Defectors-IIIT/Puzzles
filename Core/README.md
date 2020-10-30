@@ -69,6 +69,16 @@ Renders the maze and returns it as an image.
 - padding (`int`): Optional. Outer padding (in pixels) of the maze boundary. Defaults to 10.
 
 ```
+diff(maze, cell_width, padding)
+```
+Compares current maze with the input and renders the maze along with differences.
+
+**Parameters:**
+- maze (`Maze`): Object to compare the current maze with.
+- cell_width (`int`): Optional. Dimensions of each cell (in pixels) of the maze to be drawn. Defaults to 50.
+- padding (`int`): Optional. Outer padding (in pixels) of the maze boundary. Defaults to 10.
+
+```
 dump(filename)
 ```
 Dumps the maze into a file as json.
