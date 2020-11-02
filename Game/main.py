@@ -45,19 +45,20 @@ maze.load("BinaryTree_8x8.maze")
 
 # }}}
 
-PADDING = 10
+PADDING = 0
 CELL_WIDTH = (screen_dimens[0] - PADDING / 2) // maze.num_columns
 
-# initialize player
-player = Player(
+# initialize player {{{
+PLAYER = Player(
     screen,
     (PADDING + CELL_WIDTH // 2, PADDING + CELL_WIDTH // 2),
-    CELL_WIDTH // 3,
-    colors["YELLOW"],
+    (CELL_WIDTH / 2) - 2,
+    colors["BLUE"],
 )
+# }}}
 
-# initialize walls
-walls = []
+# initialize walls {{{
+WALLS = []
 for i in range(maze.num_rows):
     for j in range(maze.num_columns):
 
@@ -70,27 +71,30 @@ for i in range(maze.num_rows):
         y2 = (PADDING / 2) + ((i + 1) * CELL_WIDTH)
 
         if maze.grid[i][j].neighbors["N"] == INF:
-            walls.append(Wall(screen, (x1, y1), (x2, y1)))
+            WALLS.append(Wall(screen, (x1, y1), (x2, y1)))
         if maze.grid[i][j].neighbors["S"] == INF:
-            walls.append(Wall(screen, (x1, y2), (x2, y2)))
+            WALLS.append(Wall(screen, (x1, y2), (x2, y2)))
         if maze.grid[i][j].neighbors["W"] == INF:
-            walls.append(Wall(screen, (x1, y1), (x1, y2)))
+            WALLS.append(Wall(screen, (x1, y1), (x1, y2)))
         if maze.grid[i][j].neighbors["E"] == INF:
-            walls.append(Wall(screen, (x2, y1), (x2, y2)))
+            WALLS.append(Wall(screen, (x2, y1), (x2, y2)))
+# }}}
 
-# render all entities
+# render all entities {{{
 def redraw():
     screen.fill(colors["BLACK"])
 
-    # draw all walls
-    for wall in walls:
+    # draw all WALLS
+    for wall in WALLS:
         wall.draw()
 
-    # draw player
-    player.draw()
+    # draw PLAYER
+    PLAYER.draw()
 
     pygame.display.flip()
 
+
+# }}}
 
 # main
 run = True
@@ -104,13 +108,13 @@ while run:
     # sustained keypress actions
     keys = pygame.key.get_pressed()
     if keys[K_UP]:
-        player.move_up()
+        PLAYER.move_up(WALLS)
     elif keys[K_DOWN]:
-        player.move_down()
+        PLAYER.move_down(WALLS)
     elif keys[K_RIGHT]:
-        player.move_right()
+        PLAYER.move_right(WALLS)
     elif keys[K_LEFT]:
-        player.move_left()
+        PLAYER.move_left(WALLS)
 
     redraw()
 
