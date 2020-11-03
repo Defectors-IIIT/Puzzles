@@ -3,7 +3,8 @@ from pygame.locals import *
 
 
 class Agent:
-    def __init__(self, screen, start_position, width, color=(255, 255, 0), speed=1):
+    def __init__(self, screen, start_position, width, color=(255, 255, 0), speed=1, player=False):
+        self.player = player
         self.x, self.y = start_position
         self.screen = screen
         self.color = color

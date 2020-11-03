@@ -55,7 +55,7 @@ player_width = CELL_WIDTH - 10
 player_color = colors["RED"]
 player_speed = 0.3
 
-PLAYER = Agent(screen, player_position, player_width, player_color, player_speed)
+PLAYER = Agent(screen, player_position, player_width, player_color, player_speed, player=True)
 # }}}
 
 # initialize walls {{{
