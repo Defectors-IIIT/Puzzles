@@ -1,6 +1,7 @@
 # imports {{{
 import sys
 import pygame
+import random
 
 from Wall import Wall
 from Agent import Agent
@@ -50,7 +51,7 @@ CELL_WIDTH = (screen_dimens[0] - 2) // maze.num_columns
 
 # initialize player {{{
 player_position = coordinates((0, 0), CELL_WIDTH)
-player_width = CELL_WIDTH // 1.5
+player_width = CELL_WIDTH // 1.25
 player_color = colors["RED"]
 player_speed = 0.3
 
@@ -80,21 +81,37 @@ for i in range(maze.num_rows):
             WALLS.append(Wall(screen, (x2, y1), (x2, y2)))
 # }}}
 
+# initialize enemies {{{
+enemy1_position = coordinates(
+    (random.randint(0, maze.num_rows - 1), random.randint(0, maze.num_columns - 1)), CELL_WIDTH
+)
+enemy1_width = CELL_WIDTH // 1.25
+enemy1_color = colors["BLUE"]
+enemy1_speed = 0.3
+
+ENEMY1 = Agent(screen, enemy1_position, enemy1_width, enemy1_color, enemy1_speed)
+
+# }}}
+
 # render all entities {{{
 def redraw():
     screen.fill(colors["BLACK"])
 
-    # draw all WALLS
+    # draw all walls
     for wall in WALLS:
         wall.draw()
 
-    # draw PLAYER
+    # draw player
     PLAYER.draw()
+
+    # draw enemies
+    ENEMY1.draw()
 
     pygame.display.flip()
 
 
 # }}}
+
 
 # main
 run = True
