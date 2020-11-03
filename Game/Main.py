@@ -46,12 +46,11 @@ maze.load("BinaryTree_8x8.maze")
 
 # }}}
 
-PADDING = 0
-CELL_WIDTH = (screen_dimens[0] - PADDING / 2) // maze.num_columns
+CELL_WIDTH = (screen_dimens[0] - 2) // maze.num_columns
 
 # initialize player {{{
-player_position = (PADDING + 32, PADDING + 32)
-player_width = CELL_WIDTH - 10
+player_position = (CELL_WIDTH / 2, CELL_WIDTH / 2)
+player_width = CELL_WIDTH // 1.5
 player_color = colors["RED"]
 player_speed = 0.3
 
@@ -64,12 +63,12 @@ for i in range(maze.num_rows):
     for j in range(maze.num_columns):
 
         # top left corner coordinate
-        x1 = (PADDING / 2) + (j * CELL_WIDTH)
-        y1 = (PADDING / 2) + (i * CELL_WIDTH)
+        x1 = j * CELL_WIDTH
+        y1 = i * CELL_WIDTH
 
         # bottom right corner coordinate
-        x2 = (PADDING / 2) + ((j + 1) * CELL_WIDTH)
-        y2 = (PADDING / 2) + ((i + 1) * CELL_WIDTH)
+        x2 = (j + 1) * CELL_WIDTH
+        y2 = (i + 1) * CELL_WIDTH
 
         if maze.grid[i][j].neighbors["N"] == INF:
             WALLS.append(Wall(screen, (x1, y1), (x2, y1)))
