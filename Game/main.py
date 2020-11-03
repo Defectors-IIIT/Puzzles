@@ -51,9 +51,9 @@ CELL_WIDTH = (screen_dimens[0] - PADDING / 2) // maze.num_columns
 # initialize player {{{
 PLAYER = Player(
     screen,
-    (PADDING + CELL_WIDTH // 2, PADDING + CELL_WIDTH // 2),
-    (CELL_WIDTH / 2) - 2,
-    colors["BLUE"],
+    (PADDING + 5, PADDING + 5),
+    CELL_WIDTH // 2,
+    colors["YELLOW"],
 )
 # }}}
 
