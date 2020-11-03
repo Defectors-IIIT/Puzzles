@@ -4,6 +4,7 @@ import pygame
 
 from Wall import Wall
 from Agent import Agent
+from Utils import position
 from pygame.locals import (
     K_UP,
     K_DOWN,
@@ -117,6 +118,7 @@ while run:
         PLAYER.move_left(WALLS)
 
     redraw()
+    # print(position((PLAYER.x, PLAYER.y), CELL_WIDTH))
 
 
 pygame.quit()
