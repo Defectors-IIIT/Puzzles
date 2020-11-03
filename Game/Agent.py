@@ -2,7 +2,7 @@ import pygame
 from pygame.locals import *
 
 
-class Player:
+class Agent:
     def __init__(self, screen, start_position, width, color=(255, 255, 0), speed=1):
         self.x, self.y = start_position
         self.screen = screen
@@ -15,7 +15,7 @@ class Player:
         step = self.rect.copy()
 
         step.center = (self.x, self.y - self.speed)
-        if step.collidelist(wall_rects) == -1:
+        if step.collidelist(wall_rects) == -1 and (self.y - self.speed) > 0:
             self.y -= self.speed
 
         self.rect.center = (self.x, self.y)
@@ -25,7 +25,7 @@ class Player:
         step = self.rect.copy()
 
         step.center = (self.x, self.y + self.speed)
-        if step.collidelist(wall_rects) == -1:
+        if step.collidelist(wall_rects) == -1 and (self.y + self.speed) < self.screen.get_height():
             self.y += self.speed
 
         self.rect.center = (self.x, self.y)
@@ -35,7 +35,7 @@ class Player:
         step = self.rect.copy()
 
         step.center = (self.x - self.speed, self.y)
-        if step.collidelist(wall_rects) == -1:
+        if step.collidelist(wall_rects) == -1 and (self.x - self.speed) > 0:
             self.x -= self.speed
 
         self.rect.center = (self.x, self.y)
@@ -45,7 +45,7 @@ class Player:
         step = self.rect.copy()
 
         step.center = (self.x + self.speed, self.y)
-        if step.collidelist(wall_rects) == -1:
+        if step.collidelist(wall_rects) == -1 and (self.x + self.speed) < self.screen.get_width():
             self.x += self.speed
 
         self.rect.center = (self.x, self.y)

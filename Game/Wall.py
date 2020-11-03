@@ -11,9 +11,9 @@ class Wall:
 
         if a[0] == b[0]:
             self.height = abs(a[1] - b[1])
-            self.width = 2
+            self.width = 3
         else:
-            self.height = 2
+            self.height = 3
             self.width = abs(a[0] - b[0])
 
         self.rect = Rect(min(a[0], b[0]), min(a[1], b[1]), self.width, self.height)

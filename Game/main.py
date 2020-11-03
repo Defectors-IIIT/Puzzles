@@ -3,7 +3,7 @@ import sys
 import pygame
 
 from Wall import Wall
-from Player import Player
+from Agent import Agent
 from pygame.locals import (
     K_UP,
     K_DOWN,
@@ -50,11 +50,11 @@ CELL_WIDTH = (screen_dimens[0] - PADDING / 2) // maze.num_columns
 
 # initialize player {{{
 player_position = (PADDING + 32, PADDING + 32)
-player_width = CELL_WIDTH // 1.5
+player_width = CELL_WIDTH - 10
 player_color = colors["RED"]
 player_speed = 0.3
 
-PLAYER = Player(screen, player_position, player_width, player_color, player_speed)
+PLAYER = Agent(screen, player_position, player_width, player_color, player_speed)
 # }}}
 
 # initialize walls {{{
@@ -99,9 +99,9 @@ def redraw():
 # main
 run = True
 while run:
-    for event in pygame.event.get():
 
-        # quit game
+    # quit game
+    for event in pygame.event.get():
         if event.type == pygame.QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
             run = False
 
