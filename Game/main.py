@@ -49,12 +49,12 @@ PADDING = 0
 CELL_WIDTH = (screen_dimens[0] - PADDING / 2) // maze.num_columns
 
 # initialize player {{{
-PLAYER = Player(
-    screen,
-    (PADDING + 32, PADDING + 32),
-    CELL_WIDTH // 1.5,
-    colors["YELLOW"],
-)
+player_position = (PADDING + 32, PADDING + 32)
+player_width = CELL_WIDTH // 1.5
+player_color = colors["RED"]
+player_speed = 0.3
+
+PLAYER = Player(screen, player_position, player_width, player_color, player_speed)
 # }}}
 
 # initialize walls {{{
