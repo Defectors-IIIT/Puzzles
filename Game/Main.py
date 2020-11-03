@@ -4,7 +4,7 @@ import pygame
 
 from Wall import Wall
 from Agent import Agent
-from Utils import position
+from Utils import position, coordinates
 from pygame.locals import (
     K_UP,
     K_DOWN,
@@ -49,7 +49,7 @@ maze.load("BinaryTree_8x8.maze")
 CELL_WIDTH = (screen_dimens[0] - 2) // maze.num_columns
 
 # initialize player {{{
-player_position = (CELL_WIDTH / 2, CELL_WIDTH / 2)
+player_position = coordinates((0, 0), CELL_WIDTH)
 player_width = CELL_WIDTH // 1.5
 player_color = colors["RED"]
 player_speed = 0.3

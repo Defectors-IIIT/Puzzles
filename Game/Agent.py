@@ -13,13 +13,13 @@ class Agent:
         player=False,
         state="ACTIVE",
     ):
-        self.player = player
-        self.x, self.y = start_position
-        self.screen = screen
         self.color = color
         self.speed = speed
-        self.rect = Rect(self.x - (width / 2), self.y - (width / 2), width, width)
         self.state = state
+        self.screen = screen
+        self.player = player
+        self.x, self.y = start_position
+        self.rect = Rect(self.x - (width / 2), self.y - (width / 2), width, width)
 
     def activate(self):
         self.state = "ACTIVE"
@@ -31,7 +31,6 @@ class Agent:
         if self.state == "ACTIVE":
             wall_rects = [wall.rect for wall in walls]
             step = self.rect.copy()
-
             step.center = (self.x, self.y - self.speed)
             if step.collidelist(wall_rects) == -1 and (self.y - self.speed) > 0:
                 self.y -= self.speed
@@ -42,7 +41,6 @@ class Agent:
         if self.state == "ACTIVE":
             wall_rects = [wall.rect for wall in walls]
             step = self.rect.copy()
-
             step.center = (self.x, self.y + self.speed)
             if (
                 step.collidelist(wall_rects) == -1
@@ -56,7 +54,6 @@ class Agent:
         if self.state == "ACTIVE":
             wall_rects = [wall.rect for wall in walls]
             step = self.rect.copy()
-
             step.center = (self.x - self.speed, self.y)
             if step.collidelist(wall_rects) == -1 and (self.x - self.speed) > 0:
                 self.x -= self.speed
@@ -67,7 +64,6 @@ class Agent:
         if self.state == "ACTIVE":
             wall_rects = [wall.rect for wall in walls]
             step = self.rect.copy()
-
             step.center = (self.x + self.speed, self.y)
             if (
                 step.collidelist(wall_rects) == -1
