@@ -5,7 +5,9 @@ import random
 
 from Wall import Wall
 from Agent import Agent
+from RandomWalk import random_walk
 from Utils import position, coordinates
+
 from pygame.locals import (
     K_UP,
     K_DOWN,
@@ -51,6 +53,7 @@ maze.load("BinaryTree_8x8.maze")
 CELL_WIDTH = (screen_dimens[0] - 2) // maze.num_columns
 
 STATE = {
+    "cell_width": CELL_WIDTH,
     "screen": screen,
     "maze": maze,
     "walls": [],
@@ -101,6 +104,15 @@ enemy1_color = COLORS["blue"]
 enemy1_speed = 0.3
 
 STATE["enemies"]["one"] = Agent(screen, enemy1_position, enemy1_width, enemy1_color, enemy1_speed)
+
+enemy2_position = coordinates(
+    (random.randint(0, maze.num_rows - 1), random.randint(0, maze.num_columns - 1)), CELL_WIDTH
+)
+enemy2_width = CELL_WIDTH // 1.25
+enemy2_color = COLORS["green"]
+enemy2_speed = 1
+
+STATE["enemies"]["two"] = Agent(screen, enemy2_position, enemy2_width, enemy2_color, enemy2_speed)
 # }}}
 
 # render all entities {{{
@@ -143,6 +155,10 @@ while run:
         STATE["player"].move_right(STATE["walls"])
     if keys[K_LEFT]:
         STATE["player"].move_left(STATE["walls"])
+
+    # actions
+    STATE["enemies"]["one"].walk(random_walk, STATE)
+    STATE["enemies"]["two"].walk(random_walk, STATE)
 
     redraw()
     # print(position((STATE["player"].x, STATE["player"].y), CELL_WIDTH))
