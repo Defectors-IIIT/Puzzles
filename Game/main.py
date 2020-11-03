@@ -109,11 +109,11 @@ while run:
     keys = pygame.key.get_pressed()
     if keys[K_UP]:
         PLAYER.move_up(WALLS)
-    elif keys[K_DOWN]:
+    if keys[K_DOWN]:
         PLAYER.move_down(WALLS)
-    elif keys[K_RIGHT]:
+    if keys[K_RIGHT]:
         PLAYER.move_right(WALLS)
-    elif keys[K_LEFT]:
+    if keys[K_LEFT]:
         PLAYER.move_left(WALLS)
 
     redraw()
