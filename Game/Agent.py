@@ -40,7 +40,11 @@ class Agent:
                 self.target = (self.rect.centerx - STATE["cell_width"], self.rect.centery)
             elif next_direction == "E":
                 self.target = (self.rect.centerx + STATE["cell_width"], self.rect.centery)
-            self.state = "MOVING"
+            else:
+                self.target = None
+
+            if self.target != None:
+                self.state = "MOVING"
 
         if self.state == "MOVING":
             self.move_to_coordinate(self.target, STATE["walls"])
