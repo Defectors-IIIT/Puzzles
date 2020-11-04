@@ -118,13 +118,13 @@ class Maze:
 
                 # Cell edges
                 if self.grid[i][j].neighbors["N"] == INF:
-                    draw.line((x1, y1, x2, y1), width=2)
+                    draw.line((x1, y1, x2, y1), width=1)
                 if self.grid[i][j].neighbors["S"] == INF:
-                    draw.line((x1, y2, x2, y2), width=2)
+                    draw.line((x1, y2, x2, y2), width=1)
                 if self.grid[i][j].neighbors["W"] == INF:
-                    draw.line((x1, y1, x1, y2), width=2)
+                    draw.line((x1, y1, x1, y2), width=1)
                 if self.grid[i][j].neighbors["E"] == INF:
-                    draw.line((x2, y1, x2, y2), width=2)
+                    draw.line((x2, y1, x2, y2), width=1)
 
         return base
 
