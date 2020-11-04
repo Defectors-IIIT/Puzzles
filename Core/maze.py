@@ -354,9 +354,9 @@ class Maze:
         """
         inputs:
             imgpath:
-                path to image (1:1, monochrome) to turn into a maze
+                relative path to image (1:1, monochrome) to turn into a maze
             resolution:
-                dimensions of the square maze to generate
+                dimensions of the square maze to generate, ideally should divide the input image's dimensions perfectly
         """
 
         self.__init__(resolution, resolution)
@@ -374,7 +374,11 @@ class Maze:
             for j in range(self.num_rows):
                 R, G, B, _ = img.getpixel((i * cell_dimens, j * cell_dimens))
                 if (R, G, B) < (128, 128, 128):
-                    self.grid[j][i].neighbors["N"] = 0
-                    self.grid[j][i].neighbors["W"] = 0
-                    self.grid[j][i].neighbors["S"] = 0
                     self.grid[j][i].neighbors["E"] = 0
+                    self.grid[j][i].neighbors["S"] = 0
+                    if self.grid[j - 1][i].neighbors["S"] != INF:
+                        self.grid[j][i].neighbors["N"] = 0
+                    if self.grid[j][i - 1].neighbors["E"] != INF:
+                        self.grid[j][i].neighbors["W"] = 0
+
+        return
