@@ -53,7 +53,6 @@ class Maze:
             for j in range(self.num_columns):
                 temp.append(Node())
             self.grid.append(temp)
-        return
 
     def add_path(self, start_position, direction, edge_value):
         """
@@ -350,3 +349,32 @@ class Maze:
             self.grid.append(temp)
 
         return
+
+    def load_from_image(self, imgpath, resolution):
+        """
+        inputs:
+            imgpath:
+                path to image (1:1, monochrome) to turn into a maze
+            resolution:
+                dimensions of the square maze to generate
+        """
+
+        self.__init__(resolution, resolution)
+
+        img = Image.open(imgpath)
+
+        width, height = img.size
+        cell_dimens = width // resolution
+
+        if cell_dimens <= 0:
+            raise Exception("Resolution too high.")
+            return
+
+        for i in range(self.num_columns):
+            for j in range(self.num_rows):
+                R, G, B, _ = img.getpixel((i * cell_dimens, j * cell_dimens))
+                if (R, G, B) < (128, 128, 128):
+                    self.grid[j][i].neighbors["N"] = 0
+                    self.grid[j][i].neighbors["W"] = 0
+                    self.grid[j][i].neighbors["S"] = 0
+                    self.grid[j][i].neighbors["E"] = 0
