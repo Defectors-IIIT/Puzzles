@@ -112,7 +112,7 @@ enemy2_position = coordinates(
 )
 enemy2_width = CELL_WIDTH // 1.25
 enemy2_color = COLORS["green"]
-enemy2_speed = 0.1
+enemy2_speed = 0.2
 
 STATE["enemies"]["two"] = Agent(screen, enemy2_position, enemy2_width, enemy2_color, enemy2_speed)
 # }}}
@@ -159,7 +159,7 @@ while run:
         STATE["player"].move_left(STATE["walls"])
 
     # entity actions
-    STATE["enemies"]["one"].walk(random_walk, STATE)
+    STATE["enemies"]["one"].walk(RandomWalk, STATE)
     STATE["enemies"]["two"].walk(AStar, STATE)
 
     redraw()
