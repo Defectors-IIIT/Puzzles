@@ -94,3 +94,11 @@ Loads a maze from a file.
 **Parameters:**
 - filename (`str`): File to read the maze from.
 
+```
+load_from_image(imgpath, resolution)
+```
+Generates a maze from an image. For best results, use a monochrome 1:1 image and pick a resolution that perfectly divides the image dimensions.
+
+**Parameters:**
+- imgpath (`str`): Relative path to the image.
+- resolution (`int`): Dimensions of the generated maze. Higher implies more detail.
