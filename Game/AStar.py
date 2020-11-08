@@ -1,5 +1,5 @@
 import sys
-from Utils import position
+from Utils import position, manhattan
 from heapq import heappush, heappop
 
 sys.path.append("../")
@@ -8,7 +8,7 @@ from Core.maze import INF
 
 def Heuristic(a, b):
     # The heurisitc used is Manhattan distance since only 4 directions are possible from a particular point
-    return abs(a[0] - b[0]) + abs(a[1] - b[1])
+    return manhattan(a,b)
 
 
 def AStar(agent, STATE):

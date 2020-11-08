@@ -2,6 +2,7 @@
 import sys
 import pygame
 import random
+import time 
 
 from Wall import Wall
 from Agent import Agent
@@ -9,6 +10,7 @@ from Utils import position, coordinates
 
 from AStar import AStar
 from RandomWalk import RandomWalk
+from Minimax import Minimax_helper
 
 from pygame.locals import (
     K_UP,
@@ -39,7 +41,8 @@ COLORS = {
 # }}}
 
 # pygame setup {{{
-pygame.init()
+pygame.display.init()
+# pygame.init()
 
 screen_dimens = (500, 500)
 screen = pygame.display.set_mode(screen_dimens)
@@ -48,7 +51,6 @@ screen = pygame.display.set_mode(screen_dimens)
 # maze setup {{{
 maze = Maze()
 maze.load("BinaryTree_16x16.maze")
-
 # }}}
 
 # initialize game state {{{
@@ -56,10 +58,10 @@ CELL_WIDTH = (screen_dimens[0] - 2) // maze.num_columns
 
 STATE = {
     "cell_width": CELL_WIDTH,
-    "screen": screen,
+    #"screen": screen,
     "maze": maze,
     "walls": [],
-    "enemies": dict(),
+    "enemies": [],
     "player": None,
 }
 # }}}
@@ -105,7 +107,7 @@ enemy1_width = CELL_WIDTH // 1.25
 enemy1_color = COLORS["blue"]
 enemy1_speed = 0.3
 
-STATE["enemies"]["one"] = Agent(screen, enemy1_position, enemy1_width, enemy1_color, enemy1_speed)
+STATE["enemies"].append(Agent(screen, enemy1_position, enemy1_width, enemy1_color, enemy1_speed))
 
 enemy2_position = coordinates(
     (random.randint(0, maze.num_rows - 1), random.randint(0, maze.num_columns - 1)), CELL_WIDTH
@@ -114,7 +116,7 @@ enemy2_width = CELL_WIDTH // 1.25
 enemy2_color = COLORS["green"]
 enemy2_speed = 0.2
 
-STATE["enemies"]["two"] = Agent(screen, enemy2_position, enemy2_width, enemy2_color, enemy2_speed)
+STATE["enemies"].append(Agent(screen, enemy2_position, enemy2_width, enemy2_color, enemy2_speed))
 # }}}
 
 # render all entities {{{
@@ -126,7 +128,7 @@ def redraw():
         wall.draw()
 
     # draw enemies
-    for enemy in STATE["enemies"].values():
+    for enemy in STATE["enemies"]:
         enemy.draw()
 
     # draw player
@@ -136,9 +138,12 @@ def redraw():
 
 
 # }}}
-
-
 # main
+try:
+    human_controlled = sys.argv[1]
+except:
+    human_controlled = False
+
 run = True
 while run:
 
@@ -148,20 +153,22 @@ while run:
             run = False
 
     # sustained keypress actions
-    keys = pygame.key.get_pressed()
-    if keys[K_UP]:
-        STATE["player"].move_up(STATE["walls"])
-    if keys[K_DOWN]:
-        STATE["player"].move_down(STATE["walls"])
-    if keys[K_RIGHT]:
-        STATE["player"].move_right(STATE["walls"])
-    if keys[K_LEFT]:
-        STATE["player"].move_left(STATE["walls"])
+    if(human_controlled):
+        keys = pygame.key.get_pressed()
+        if keys[K_UP]:
+            STATE["player"].move_up(STATE["walls"])
+        if keys[K_DOWN]:
+            STATE["player"].move_down(STATE["walls"])
+        if keys[K_RIGHT]:
+            STATE["player"].move_right(STATE["walls"])
+        if keys[K_LEFT]:
+            STATE["player"].move_left(STATE["walls"])
+    else:
+        STATE["player"].walk(Minimax_helper, STATE)
 
     # entity actions
-    STATE["enemies"]["one"].walk(RandomWalk, STATE)
-    STATE["enemies"]["two"].walk(AStar, STATE)
-
+    STATE["enemies"][0].walk(AStar, STATE)
+    STATE["enemies"][1].walk(AStar, STATE)
     redraw()
 
 pygame.quit()

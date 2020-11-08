@@ -1,5 +1,9 @@
 import math
 
+# return manhattan distance between two coordinates
+def manhattan(a, b):
+    return abs(a[0] - b[0]) + abs(a[1] - b[1])
+
 # return cell position given coordinates
 def position(coordinates, cell_width):
     x, y = coordinates
