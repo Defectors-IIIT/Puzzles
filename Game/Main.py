@@ -167,7 +167,7 @@ while run:
         STATE["player"].walk(Minimax_helper, STATE)
 
     # entity actions
-    STATE["enemies"][0].walk(AStar, STATE)
+    STATE["enemies"][0].walk(RandomWalk, STATE)
     STATE["enemies"][1].walk(AStar, STATE)
     redraw()
 
