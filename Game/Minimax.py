@@ -23,7 +23,7 @@ def evaluation_function(positions):
     return distance
 
 # Gets the possible directions that an agent can move to
-# given its current position
+# given it's current position
 def get_possible_directions(agent_index, positions, maze):
     neighbors = [(0, 1, "S"), (0, -1, "N"), (1, 0, "E"), (-1, 0, "W")]
     current = positions[agent_index]
@@ -56,21 +56,21 @@ def Minimax_helper(agent, STATE):
     all_agents = [STATE["player"],]
     all_agents.extend(STATE["enemies"])
 
-    # Array of positions of all the agents. The player agent is index 0. 
+    # Array of positions of all the agents. The player agent is index 0
     positions = [position(agent.rect.center, STATE["cell_width"]) for agent in all_agents]
     max_eval = -INF
     final_direction = None
     maze = STATE["maze"]
     possible_directions = get_possible_directions(0, positions, maze)
-
+    #print(possible_directions)
     for direction in possible_directions:
         new_positions = get_new_positions(0, direction, positions)
         ev = minimax(2, True, 1, -INF, INF, new_positions, maze)
-        print(new_positions, direction, ev)
+        #print(new_positions, direction, ev)
         if(ev > max_eval):
             max_eval = ev
             final_direction = direction
-    print(final_direction)
+    #print(final_direction)
     return final_direction
 
 def minimax(depth, is_maximizing, agent_index, alpha, beta, positions, maze):
