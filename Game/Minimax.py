@@ -23,7 +23,7 @@ def evaluation_function(positions):
     return distance
 
 # Gets the possible directions that an agent can move to
-# given it's current position
+# given its current position
 def get_possible_directions(agent_index, positions, maze):
     neighbors = [(0, 1, "S"), (0, -1, "N"), (1, 0, "E"), (-1, 0, "W")]
     current = positions[agent_index]
@@ -62,7 +62,7 @@ def Minimax_helper(agent, STATE):
     final_direction = None
     maze = STATE["maze"]
     possible_directions = get_possible_directions(0, positions, maze)
-    
+
     for direction in possible_directions:
         new_positions = get_new_positions(0, direction, positions)
         ev = minimax(2, True, 1, -INF, INF, new_positions, maze)
