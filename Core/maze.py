@@ -372,7 +372,10 @@ class Maze:
 
         for i in range(self.num_columns):
             for j in range(self.num_rows):
-                R, G, B, _ = img.getpixel((i * cell_dimens, j * cell_dimens))
+                color = img.getpixel((i * cell_dimens, j * cell_dimens))
+                R = color[0]
+                G = color[1]
+                B = color[2]
                 if (R, G, B) < (128, 128, 128):
                     self.grid[j][i].neighbors["E"] = 0
                     self.grid[j][i].neighbors["S"] = 0
