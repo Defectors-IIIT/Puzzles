@@ -93,16 +93,14 @@ def execute_episode():
             Q, epsilon=0.1)
         R = reward(maze, state)
         next_state = get_next_state(maze, state, action)
-        if not next_state:
-            print("BRUH: ", state, action, R)
+        
         next_best = max(q_table[next_state])
+        
         td_target = R + DISCOUNT * next_best
         td_diff = td_target - q_table[state][action]
+        
         q_table[state][action] += LEARNING_RATE * td_diff        
         q_table[state][action] = round(q_table[state][action], 3)
-
-        # print(state, next_state, td_target, td_diff)
-
 
 if __name__ == "__main__":
     load_maze()
