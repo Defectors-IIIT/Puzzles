@@ -17,6 +17,7 @@ N = M = 8
 ACTIONS = [0, 1, 2, 3]
 DISCOUNT = 0.8
 LEARNING_RATE = 0.5
+PLANNING = 0
 
 def load_maze():
     global maze 
@@ -42,6 +43,20 @@ def reset_q_table():
                     temp.append(10)
             q_table.append(temp)
 
+def reset_model():
+    """
+    initialises/resets the model of the simulation
+    """
+    # setup the q table
+    global model
+    model = []
+
+    for _ in range(N*M):
+        temp = []
+        for __ in ACTIONS:
+            temp.append((0, 0))
+        model.append(temp)
+
 def print_q_table():
     for i in range(N*M):
         print(q_table[i], end="\t")
@@ -60,40 +75,23 @@ def visualise_q_table():
         if not (i+1) % N:
             print()
 
-def get_path():
-    i = N*M-2
-    path = [i]
-    visited = set()
-    while i:
-        temp = []
-        for action, value in enumerate(q_table[i]):
-            temp.append((value, action))
-        temp.sort()
-        for item in temp:
-            try:
-                new_state = get_next_state(maze, i, item[1])
-        
-                if new_state not in visited:
-                    i = new_state
-                    path.append(i)
-                    break
-            except:
-                continue
-
-    return path
-
 def Q(state, action):
     return q_table[state][action]
 
 def execute_episode():
+    history = []
+
     for state in range(N*M):
         action = e_greedy(
             state, 
             get_valid_actions(maze, state, ACTIONS), 
             Q, epsilon=0.1)
+
+        history.append((state, action))
+
         R = reward(maze, state)
-        next_state = get_next_state(maze, state, action)
         
+        next_state = get_next_state(maze, state, action)
         next_best = max(q_table[next_state])
         
         td_target = R + DISCOUNT * next_best
@@ -102,11 +100,28 @@ def execute_episode():
         q_table[state][action] += LEARNING_RATE * td_diff        
         q_table[state][action] = round(q_table[state][action], 3)
 
+        model[state][action] = (next_state, R)
+
+        for _ in range(PLANNING):
+            state, action = random.choice(history)
+            next_state, R = model[state][action]
+            next_best = max(q_table[next_state])
+            
+            td_target = R + DISCOUNT * next_best
+            td_diff = td_target - q_table[state][action]
+            
+            q_table[state][action] += LEARNING_RATE * td_diff        
+            q_table[state][action] = round(q_table[state][action], 3)
+
+
 if __name__ == "__main__":
     load_maze()
+    
     reset_q_table()
-    for _ in range(100):
+    reset_model()
+
+    for _ in range(10):
         execute_episode()
+    
     print_q_table()
     visualise_q_table()
-    # print("PATH: ", get_path())
