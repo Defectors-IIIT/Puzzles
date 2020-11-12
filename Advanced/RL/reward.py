@@ -10,7 +10,7 @@ def reward_cell(maze, cell):
     if cell[0] == maze.num_rows - 1 and cell[1] == maze.num_columns - 1:
         return 1000
     else:
-        return -1
+        return 0
 
 def reward(maze, state):
     """
