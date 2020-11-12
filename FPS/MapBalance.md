@@ -1,4 +1,4 @@
-# Exploring Map Bias in FPS Games
+# Exploring Map Balance in FPS Games
 
 ## Introduction of the Game
 
