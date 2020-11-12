@@ -17,6 +17,12 @@ N = M = 8
 ACTIONS = [0, 1, 2, 3]
 DISCOUNT = 0.8
 LEARNING_RATE = 0.5
+ACTION_MAPPER = {
+        0: 'N',
+        1: 'S',
+        2: 'W',
+        3: 'E'
+    }
 
 def load_maze():
     global maze 
@@ -49,12 +55,6 @@ def print_q_table():
             print()
 
 def visualise_q_table():
-    action_dict = {
-        0: 'up',
-        1: 'down',
-        2: 'left',
-        3: 'right'
-    }
     for i in range(N*M):
         print(action_dict[np.argmax(q_table[i])], end="\t")
         if not (i+1) % N:
