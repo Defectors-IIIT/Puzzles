@@ -53,7 +53,6 @@ class Maze:
             for j in range(self.num_columns):
                 temp.append(Node())
             self.grid.append(temp)
-        return
 
     def add_path(self, start_position, direction, edge_value):
         """
@@ -119,13 +118,13 @@ class Maze:
 
                 # Cell edges
                 if self.grid[i][j].neighbors["N"] == INF:
-                    draw.line((x1, y1, x2, y1), width=2)
+                    draw.line((x1, y1, x2, y1), width=1)
                 if self.grid[i][j].neighbors["S"] == INF:
-                    draw.line((x1, y2, x2, y2), width=2)
+                    draw.line((x1, y2, x2, y2), width=1)
                 if self.grid[i][j].neighbors["W"] == INF:
-                    draw.line((x1, y1, x1, y2), width=2)
+                    draw.line((x1, y1, x1, y2), width=1)
                 if self.grid[i][j].neighbors["E"] == INF:
-                    draw.line((x2, y1, x2, y2), width=2)
+                    draw.line((x2, y1, x2, y2), width=1)
 
         return base
 
@@ -245,6 +244,70 @@ class Maze:
                     ret["RightTurns"] += 1
         return ret
 
+    def diff(self, maze, cell_width=50, padding=10):
+        """
+        inputs:
+            maze:
+                to compare with
+            cell_width:
+                dimension of each cell in the grid
+            padding:
+                for the outer maze edge
+        """
+
+        base_dimens = (
+            padding + (self.num_columns * cell_width),
+            padding + (self.num_rows * cell_width),
+        )
+        base = Image.new("RGBA", base_dimens, (0, 0, 0, 255))
+        draw = ImageDraw.Draw(base)
+
+        for i in range(self.num_rows):
+            for j in range(self.num_columns):
+
+                # Top left corner coordinate
+                x1 = (padding / 2) + (j * cell_width) - 1
+                y1 = (padding / 2) + (i * cell_width) - 1
+
+                # Bottom right corner coordinate
+                x2 = (padding / 2) + ((j + 1) * cell_width) - 1
+                y2 = (padding / 2) + ((i + 1) * cell_width) - 1
+
+                # Cell background
+                draw.rectangle((x1, y1, x2, y2), fill=self.grid[i][j].color)
+
+                # Common edges
+                if self.grid[i][j].neighbors["N"] == INF or maze.grid[i][j].neighbors["N"] == INF:
+                    draw.line((x1, y1, x2, y1), width=2, fill=(255, 255, 255))
+                if self.grid[i][j].neighbors["S"] == INF or maze.grid[i][j].neighbors["S"] == INF:
+                    draw.line((x1, y2, x2, y2), width=2, fill=(255, 255, 255))
+                if self.grid[i][j].neighbors["W"] == INF or maze.grid[i][j].neighbors["W"] == INF:
+                    draw.line((x1, y1, x1, y2), width=2, fill=(255, 255, 255))
+                if self.grid[i][j].neighbors["E"] == INF or maze.grid[i][j].neighbors["E"] == INF:
+                    draw.line((x2, y1, x2, y2), width=2, fill=(255, 255, 255))
+
+                # Added edges
+                if self.grid[i][j].neighbors["N"] == INF and maze.grid[i][j].neighbors["N"] != INF:
+                    draw.line((x1, y1, x2, y1), width=2, fill=(0, 255, 0))
+                if self.grid[i][j].neighbors["S"] == INF and maze.grid[i][j].neighbors["S"] != INF:
+                    draw.line((x1, y2, x2, y2), width=2, fill=(0, 255, 0))
+                if self.grid[i][j].neighbors["W"] == INF and maze.grid[i][j].neighbors["W"] != INF:
+                    draw.line((x1, y1, x1, y2), width=2, fill=(0, 255, 0))
+                if self.grid[i][j].neighbors["E"] == INF and maze.grid[i][j].neighbors["E"] != INF:
+                    draw.line((x2, y1, x2, y2), width=2, fill=(0, 255, 0))
+
+                # Removed edges
+                if self.grid[i][j].neighbors["N"] != INF and maze.grid[i][j].neighbors["N"] == INF:
+                    draw.line((x1, y1, x2, y1), width=2, fill=(255, 0, 0))
+                if self.grid[i][j].neighbors["S"] != INF and maze.grid[i][j].neighbors["S"] == INF:
+                    draw.line((x1, y2, x2, y2), width=2, fill=(255, 0, 0))
+                if self.grid[i][j].neighbors["W"] != INF and maze.grid[i][j].neighbors["W"] == INF:
+                    draw.line((x1, y1, x1, y2), width=2, fill=(255, 0, 0))
+                if self.grid[i][j].neighbors["E"] != INF and maze.grid[i][j].neighbors["E"] == INF:
+                    draw.line((x2, y1, x2, y2), width=2, fill=(255, 0, 0))
+
+        return base
+
     def dump(self, filename):
         """
         inputs:
@@ -284,5 +347,38 @@ class Maze:
             for j in range(self.num_columns):
                 temp.append(Node(neighbors=maze[i][j]["neighbors"], color=[0, 0, 0]))
             self.grid.append(temp)
+
+        return
+
+    def load_from_image(self, imgpath, resolution):
+        """
+        inputs:
+            imgpath:
+                relative path to image (1:1, monochrome) to turn into a maze
+            resolution:
+                dimensions of the square maze to generate, ideally should divide the input image's dimensions perfectly
+        """
+
+        self.__init__(resolution, resolution)
+
+        img = Image.open(imgpath)
+
+        width, height = img.size
+        cell_dimens = width // resolution
+
+        if cell_dimens <= 0:
+            raise Exception("Resolution too high.")
+            return
+
+        for i in range(self.num_columns):
+            for j in range(self.num_rows):
+                R, G, B, _ = img.getpixel((i * cell_dimens, j * cell_dimens))
+                if (R, G, B) < (128, 128, 128):
+                    self.grid[j][i].neighbors["E"] = 0
+                    self.grid[j][i].neighbors["S"] = 0
+                    if self.grid[j - 1][i].neighbors["S"] != INF:
+                        self.grid[j][i].neighbors["N"] = 0
+                    if self.grid[j][i - 1].neighbors["E"] != INF:
+                        self.grid[j][i].neighbors["W"] = 0
 
         return
