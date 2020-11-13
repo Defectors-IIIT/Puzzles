@@ -42,10 +42,13 @@ def reset_q_table():
             temp = []
             for value in maze.grid[i][j].neighbors.values():
                 if value == INF:
-                    temp.append(-10000)
+                    temp.append(-1000)
                 else:
                     # temp.append(round(random.random(), 3))
                     temp.append(10)
+
+            # for action in ACTIONS:
+            #     temp.append(round(random.random(), 3))
             q_table.append(temp)
 
 def print_q_table():
@@ -56,7 +59,7 @@ def print_q_table():
 
 def visualise_q_table():
     for i in range(N*M):
-        print(action_dict[np.argmax(q_table[i])], end="\t")
+        print(ACTION_MAPPER[np.argmax(q_table[i])], end="\t")
         if not (i+1) % N:
             print()
 
@@ -91,7 +94,7 @@ def execute_episode():
             state, 
             get_valid_actions(maze, state, ACTIONS), 
             Q, epsilon=0.1)
-        R = reward(maze, state)
+        R = reward(maze, state, action)
         next_state = get_next_state(maze, state, action)
         
         next_best = max(q_table[next_state])
@@ -105,7 +108,7 @@ def execute_episode():
 if __name__ == "__main__":
     load_maze()
     reset_q_table()
-    for _ in range(100):
+    for _ in range(256):
         execute_episode()
     print_q_table()
     visualise_q_table()
