@@ -40,22 +40,23 @@ def get_next_cell(maze, current_cell, action):
         current_state:
             the current tuple of indices in the grid
         action:
-            any of [0, 1, 2, 3] 
-            taking the directions N, S, W, E respectively
+            any of [0, 1, 2, 3, 4, 5, 6, 7] 
+            taking the directions N, S, W, E respectively, 
+            followed by mirage wall checking
 
     returns:
         valid action: the index tuple of the next state
         invalid action: None
     """
 
-    if not (0 <= action < 4):
-        raise ValueError(f"Invalid action {action}. Must be in [0, 3] range.")
+    if not (0 <= action < 8):
+        raise ValueError(f"Invalid action {action}. Must be in [0, 8) range.")
     
     x, y = current_cell
     
     if not in_range(maze, x, y):
         return None
-    directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+    directions = [(-1, 0), (1, 0), (0, -1), (0, 1), (0, 0), (0, 0), (0, 0), (0, 0)]
     dx, dy = directions[action]
 
     if not in_range(maze, x+dx, y+dy):
