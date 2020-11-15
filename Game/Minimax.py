@@ -7,20 +7,33 @@ from Core.maze import INF
 
 INF = float('inf')
 
-def evaluation_function(positions):
+def evaluation_function(positions, maze):
+    def get_paths(pos):
+        paths = 0
+        if(maze.grid[pos[1]][pos[0]].neighbors["N"] != INF):
+            paths+=1
+        if(maze.grid[pos[1]][pos[0]].neighbors["S"] != INF):
+            paths+=1
+        if(maze.grid[pos[1]][pos[0]].neighbors["E"] != INF):
+            paths+=1
+        if(maze.grid[pos[1]][pos[0]].neighbors["W"] != INF):
+            paths+=1
+        return paths
     # Need a better evaluation function and need a different type of maze. 
     # Potentially - penalize dead ends, have rewards, have game over state
     pos = positions[0]
     targets = positions[1:]
-    distance = 0
+    score = -2*manhattan(pos, (15,15))
 
     for target in targets:
         ghost_dist = manhattan(pos, target)
-        if(ghost_dist <= 1):
+        if(ghost_dist <= 3):
             ghost_dist = -100
-        distance+=ghost_dist
+        score+=ghost_dist
 
-    return distance
+    score+=10*get_paths(pos)
+
+    return score
 
 # Gets the possible directions that an agent can move to
 # given it's current position
@@ -38,6 +51,8 @@ def get_possible_directions(agent_index, positions, maze):
             continue
         if maze.grid[current[1]][current[0]].neighbors[k] == INF:
             continue
+        # if(neighbor in positions):
+        #     continue
         possible_directions.append(k)
     return possible_directions
 
@@ -62,20 +77,17 @@ def Minimax_helper(agent, STATE):
     final_direction = None
     maze = STATE["maze"]
     possible_directions = get_possible_directions(0, positions, maze)
-    #print(possible_directions)
     for direction in possible_directions:
         new_positions = get_new_positions(0, direction, positions)
-        ev = minimax(2, True, 1, -INF, INF, new_positions, maze)
-        #print(new_positions, direction, ev)
+        ev = minimax(2, False, 1, -INF, INF, new_positions, maze)
         if(ev > max_eval):
             max_eval = ev
             final_direction = direction
-    #print(final_direction)
     return final_direction
 
 def minimax(depth, is_maximizing, agent_index, alpha, beta, positions, maze):
     if(depth == 0):
-        return evaluation_function(positions)
+        return evaluation_function(positions, maze)
     
     possible_directions = get_possible_directions(agent_index, positions, maze)
 
