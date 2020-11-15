@@ -7,33 +7,18 @@ from Core.maze import INF
 
 INF = float('inf')
 
-def evaluation_function(positions, maze):
-    def get_paths(pos):
-        paths = 0
-        if(maze.grid[pos[1]][pos[0]].neighbors["N"] != INF):
-            paths+=1
-        if(maze.grid[pos[1]][pos[0]].neighbors["S"] != INF):
-            paths+=1
-        if(maze.grid[pos[1]][pos[0]].neighbors["E"] != INF):
-            paths+=1
-        if(maze.grid[pos[1]][pos[0]].neighbors["W"] != INF):
-            paths+=1
-        return paths
-    # Need a better evaluation function and need a different type of maze. 
-    # Potentially - penalize dead ends, have rewards, have game over state
+def evaluation_function(positions):
     pos = positions[0]
     targets = positions[1:]
-    score = -2*manhattan(pos, (15,15))
+    distance = 0
 
     for target in targets:
         ghost_dist = manhattan(pos, target)
-        if(ghost_dist <= 3):
+        if(ghost_dist <= 1):
             ghost_dist = -100
-        score+=ghost_dist
+        distance+=ghost_dist
 
-    score+=10*get_paths(pos)
-
-    return score
+    return distance
 
 # Gets the possible directions that an agent can move to
 # given it's current position
@@ -51,8 +36,6 @@ def get_possible_directions(agent_index, positions, maze):
             continue
         if maze.grid[current[1]][current[0]].neighbors[k] == INF:
             continue
-        # if(neighbor in positions):
-        #     continue
         possible_directions.append(k)
     return possible_directions
 
@@ -67,7 +50,7 @@ def get_new_positions(agent_index, direction, positions):
     return new_positions
 
 # Function that is called by agent to get the next move
-def Minimax_helper(agent, STATE):
+def Expectimax_helper(agent, STATE):
     all_agents = [STATE["player"],]
     all_agents.extend(STATE["enemies"])
 
@@ -77,48 +60,53 @@ def Minimax_helper(agent, STATE):
     final_direction = None
     maze = STATE["maze"]
     possible_directions = get_possible_directions(0, positions, maze)
+    #print(possible_directions)
     for direction in possible_directions:
         new_positions = get_new_positions(0, direction, positions)
-        ev = minimax(2, False, 1, -INF, INF, new_positions, maze)
+        ev = expectimax(2, 1, 1, new_positions, maze)
+        #print(new_positions, direction, ev)
         if(ev > max_eval):
             max_eval = ev
             final_direction = direction
+    #print(final_direction)
     return final_direction
 
-def minimax(depth, is_maximizing, agent_index, alpha, beta, positions, maze):
+def expectimax(depth, is_maximizing, agent_index, positions, maze):
     if(depth == 0):
-        return evaluation_function(positions, maze)
+        return evaluation_function(positions)
     
     possible_directions = get_possible_directions(agent_index, positions, maze)
 
-    if(is_maximizing):
+    if(is_maximizing==1):
         max_eval = -INF
         for direction in possible_directions:
             new_positions = get_new_positions(agent_index, direction, positions)
-            ev = minimax(depth-1, False, 1, alpha, beta, new_positions, maze)
+            ev = expectimax(depth-1, 2, 1, new_positions, maze)
             max_eval = max(max_eval, ev)
-            alpha = max(alpha, ev)
-            if(alpha >= beta):
-                break
-        return max_eval
     
-    else:
+    elif(is_maximizing==2):
         min_eval = INF
         if(agent_index == len(positions)-1):
             for direction in possible_directions:
                 new_positions = get_new_positions(agent_index, direction, positions)
-                ev = minimax(depth-1, True, 0, alpha, beta, new_positions, maze)
+                ev = expectimax(depth-1, 3, 0, new_positions, maze)
                 min_eval = min(min_eval, ev)
-                beta = min(beta, ev)
-                if(beta <= alpha):
-                    break
             return min_eval
         else:
             for direction in possible_directions:
                 new_positions = get_new_positions(agent_index, direction, positions)
-                ev = minimax(depth-1, False, agent_index+1, alpha, beta, new_positions, maze)
+                ev = expectimax(depth-1, False, agent_index+1, new_positions, maze)
                 if(ev < min_eval):
                     min_eval = ev
             return min_eval
+    else:
+        rand_eval = 0
+        for direction in possible_directions:
+            new_positions = get_new_positions(agent_index, direction, positions)
+            ev = expectimax(depth-1, 2, 1, new_positions, maze)
+            rand_eval+=ev
+        return rand_eval/len(possible_directions)
+
+
 
 
