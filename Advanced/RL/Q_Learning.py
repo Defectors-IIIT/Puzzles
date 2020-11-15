@@ -80,7 +80,6 @@ def Q(state, action):
 
 def execute_episode():
     total_cumulative_reward = 0
-    state = 0
     for state in range(N*M):
         action = e_greedy(
             state, 

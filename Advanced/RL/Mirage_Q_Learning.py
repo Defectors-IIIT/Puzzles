@@ -15,6 +15,8 @@ from reward import reward_mirage
 
 from mirage_helper import Mirage
 
+import matplotlib.pyplot as plt
+
 N = M = 8
 ACTIONS = [i for i in range(8)]
 DISCOUNT = 0.8
@@ -28,8 +30,12 @@ ACTION_MAPPER = {
 
 def load_maze():
     global maze 
+    global mirage 
     maze = Maze()
+    mirage = Maze()
+    
     maze.load(f"BinaryTree_{N}x{M}.maze")
+    mirage.load(f"Perceived_BinaryTree_{N}x{M}.maze")
 
 def reset_q_table():
     """
@@ -78,7 +84,18 @@ def visualise_q_table():
 def Q(state, action):
     return q_table[state][action]
 
+def get_path():
+    i = 0
+    path = [i]
+
+    while i != N*M-1:
+        i = get_next_state(maze, i, ACTIONS[np.argmax(q_table[i])])
+        path.append(i)
+    
+    return path
+
 def execute_episode():
+    total_cumulative_reward = 0
     for state in range(N*M):
         action = e_greedy(
             state, 
@@ -95,14 +112,23 @@ def execute_episode():
         q_table[state][action] += LEARNING_RATE * td_diff        
         q_table[state][action] = round(q_table[state][action], 3)
 
+        total_cumulative_reward += R
+
+    return total_cumulative_reward
+
 if __name__ == "__main__":
     load_maze()
-    global mirage
-    mirage = Mirage(maze, 0.2)
 
     reset_q_table()
-    for _ in range(512):
-        execute_episode()
     
-    print_q_table()
+    episodes = []
+    values = []
+    for i in range(256):
+        episodes.append(i)
+        values.append(execute_episode())
+    
+    # print_q_table()
     visualise_q_table()
+
+    plt.plot(episodes, values)
+    plt.show()
