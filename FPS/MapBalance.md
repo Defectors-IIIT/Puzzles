@@ -2,9 +2,9 @@
 
 ## Introduction of the Game
 
-The game being considered is a 5v5 tac-shooter matchup to plant or defuse the Spike in a one-life-per-round, first to 13 series. It emphasises precise gunplay, tactical thinking and on-the-fly decision making.
+The game being considered is a 5v5 tac-shooter matchup to plant or defuse the Spike in a one-life-per-round, first to win specific number of rounds series. It emphasises precise gunplay, tactical thinking and on-the-fly decision making.
 
-The game is played on a map, varying between the existing ones. There are the attackers and the defenders. The attackers' objective is to plant the spike at one of the sites on the map or to eliminate all enemy players. The defenders have to prevent the attackers from planting the spike, have to defuse the spike if planted or have to eliminate all enemy players. The attackers and defenders after 12 rounds.
+The game is played on a map, varying between the existing ones. There are the attackers and the defenders. The attackers' objective is to plant the spike at one of the sites on the map or to eliminate all enemy players. The defenders have to prevent the attackers from planting the spike, have to defuse the spike if planted or have to eliminate all enemy players. The attackers and defenders swap midway.
 
 ## Aim
 
@@ -12,7 +12,7 @@ Leaving aside tactics, strategies, abilities and gunplay, the objective is to an
 
 ### Safe Attack Position
 
-While attacking, the player should focus on one enemy and not expose to the other. Being exposed to multiple enemies would lead to trade kills and baiting, leading to the elimination of the attacker. A good attack position will provide line of sight of one enemy and cover from all other enemies.
+While attacking, the player should focus on one enemy and not expose to the other. Being exposed to multiple enemies would lead to trade eliminations and baiting, leading to the elimination of the attacker. A good attack position will provide line of sight of one enemy and cover from all other enemies.
 
 ### Ambush and Sniper Positions
 
