@@ -7,7 +7,7 @@ from Core.maze import INF
 
 INF = float('inf')
 
-def evaluation_function(positions, maze):
+def evaluation_function(positions, maze, is_maximizing):
     def get_paths(pos):
         paths = 0
         if(maze.grid[pos[1]][pos[0]].neighbors["N"] != INF):
@@ -23,16 +23,17 @@ def evaluation_function(positions, maze):
     # Potentially - penalize dead ends, have rewards, have game over state
     pos = positions[0]
     targets = positions[1:]
-    score = -2*manhattan(pos, (15,15))
+    # score = -2*manhattan(pos, (15,15))
+    score = 0
 
     for target in targets:
         ghost_dist = manhattan(pos, target)
-        if(ghost_dist <= 3):
-            ghost_dist = -100
-        score+=ghost_dist
+        if(ghost_dist <= 1):
+            ghost_dist = -1
+        score+=1/ghost_dist
 
-    score+=10*get_paths(pos)
-
+    # score+=10*get_paths(pos)
+    # print("EVAL POS", is_maximizing, positions)
     return score
 
 # Gets the possible directions that an agent can move to
@@ -40,14 +41,14 @@ def evaluation_function(positions, maze):
 def get_possible_directions(agent_index, positions, maze):
     neighbors = [(0, 1, "S"), (0, -1, "N"), (1, 0, "E"), (-1, 0, "W")]
     current = positions[agent_index]
-    #print(maze.grid[current[1]][current[0]].neighbors)
+    # print(maze.grid[current[1]][current[0]].neighbors)
     possible_directions = []
     for i, j, k in neighbors:
         neighbor = (current[0] + i, current[1] + j)
         # Checking if the neighbor is out of bounds or if the path to the neighbor is blocked
-        if neighbor[0] < 0 or neighbor[0] >= len(maze.grid):
+        if neighbor[0] < 0 or neighbor[0] >= maze.num_columns:
             continue
-        if neighbor[1] < 0 or neighbor[1] >= len(maze.grid[0]):
+        if neighbor[1] < 0 or neighbor[1] >= maze.num_rows:
             continue
         if maze.grid[current[1]][current[0]].neighbors[k] == INF:
             continue
@@ -71,23 +72,30 @@ def Minimax_helper(agent, STATE):
     all_agents = [STATE["player"],]
     all_agents.extend(STATE["enemies"])
 
+    alpha = -INF
+    beta = INF
     # Array of positions of all the agents. The player agent is index 0
     positions = [position(agent.rect.center, STATE["cell_width"]) for agent in all_agents]
     max_eval = -INF
     final_direction = None
     maze = STATE["maze"]
     possible_directions = get_possible_directions(0, positions, maze)
+    # print("CURRENT POSITIONS", positions)
+    # print("OPTIONS", possible_directions)
     for direction in possible_directions:
         new_positions = get_new_positions(0, direction, positions)
-        ev = minimax(2, False, 1, -INF, INF, new_positions, maze)
-        if(ev > max_eval):
+        ev = minimax(2, False, 1, alpha, beta, new_positions, maze)
+        # print("EVALUATION", direction, ev)
+        if(alpha < ev):
+            alpha = ev
             max_eval = ev
             final_direction = direction
+    # print("PICKING", final_direction)
     return final_direction
 
 def minimax(depth, is_maximizing, agent_index, alpha, beta, positions, maze):
     if(depth == 0):
-        return evaluation_function(positions, maze)
+        return evaluation_function(positions, maze, is_maximizing)
     
     possible_directions = get_possible_directions(agent_index, positions, maze)
 
@@ -120,5 +128,3 @@ def minimax(depth, is_maximizing, agent_index, alpha, beta, positions, maze):
                 if(ev < min_eval):
                     min_eval = ev
             return min_eval
-
-

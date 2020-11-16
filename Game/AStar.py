@@ -63,9 +63,9 @@ def AStar(agent, STATE):
         for i, j, k in neighbors:
             neighbor = (current[0] + i, current[1] + j)
             # Checking if the neighbor is out of bounds or if the path to the neighbor is blocked
-            if neighbor[0] < 0 or neighbor[0] >= len(maze.grid[0]):
+            if neighbor[0] < 0 or neighbor[0] >= maze.num_rows:
                 continue
-            if neighbor[1] < 0 or neighbor[1] >= len(maze.grid):
+            if neighbor[1] < 0 or neighbor[1] >= maze.num_columns:
                 continue
             if maze.grid[current[0]][current[1]].neighbors[k] == INF:
                 continue
