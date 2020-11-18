@@ -13,10 +13,18 @@ from helper import get_next_state, get_valid_actions
 from policy import e_greedy
 from reward import reward
 
+import matplotlib.pyplot as plt
+
 N = M = 8
 ACTIONS = [0, 1, 2, 3]
 DISCOUNT = 0.8
 LEARNING_RATE = 0.5
+ACTION_MAPPER = {
+        0: 'N',
+        1: 'S',
+        2: 'W',
+        3: 'E'
+    }
 
 def load_maze():
     global maze 
@@ -34,12 +42,15 @@ def reset_q_table():
     for i in range(N):
         for j in range(M):
             temp = []
-            for value in maze.grid[i][j].neighbors.values():
-                if value == INF:
-                    temp.append(-10000)
-                else:
-                    # temp.append(round(random.random(), 3))
-                    temp.append(10)
+            # for value in maze.grid[i][j].neighbors.values():
+            #     if value == INF:
+            #         temp.append(-1000)
+            #     else:
+            #         # temp.append(round(random.random(), 3))
+            #         temp.append(10)
+
+            for _ in ACTIONS:
+                temp.append(1)
             q_table.append(temp)
 
 def print_q_table():
@@ -49,49 +60,32 @@ def print_q_table():
             print()
 
 def visualise_q_table():
-    action_dict = {
-        0: 'up',
-        1: 'down',
-        2: 'left',
-        3: 'right'
-    }
     for i in range(N*M):
-        print(action_dict[np.argmax(q_table[i])], end="\t")
+        print(ACTION_MAPPER[np.argmax(q_table[i])], end="\t")
         if not (i+1) % N:
             print()
 
 def get_path():
-    i = N*M-2
+    i = 0
     path = [i]
-    visited = set()
-    while i:
-        temp = []
-        for action, value in enumerate(q_table[i]):
-            temp.append((value, action))
-        temp.sort()
-        for item in temp:
-            try:
-                new_state = get_next_state(maze, i, item[1])
-        
-                if new_state not in visited:
-                    i = new_state
-                    path.append(i)
-                    break
-            except:
-                continue
 
+    while i != N*M-1:
+        i = get_next_state(maze, i, ACTIONS[np.argmax(q_table[i])])
+        path.append(i)
+    
     return path
 
 def Q(state, action):
     return q_table[state][action]
 
 def execute_episode():
+    total_cumulative_reward = 0
     for state in range(N*M):
         action = e_greedy(
             state, 
             get_valid_actions(maze, state, ACTIONS), 
             Q, epsilon=0.1)
-        R = reward(maze, state)
+        R = reward(maze, state, action)
         next_state = get_next_state(maze, state, action)
         
         next_best = max(q_table[next_state])
@@ -101,12 +95,25 @@ def execute_episode():
         
         q_table[state][action] += LEARNING_RATE * td_diff        
         q_table[state][action] = round(q_table[state][action], 3)
+        
+        total_cumulative_reward += R
+    
+    return total_cumulative_reward
 
 if __name__ == "__main__":
     load_maze()
     reset_q_table()
-    for _ in range(100):
-        execute_episode()
-    print_q_table()
+
+    episodes = []
+    values = []
+    for i in range(256):
+        episodes.append(i)
+        values.append(execute_episode())
+    
+    # print_q_table()
     visualise_q_table()
-    # print("PATH: ", get_path())
+    
+    print("PATH: ", get_path())
+    
+    plt.plot(episodes, values)
+    plt.show()
